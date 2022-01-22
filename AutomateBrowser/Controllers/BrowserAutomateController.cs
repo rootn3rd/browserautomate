@@ -19,6 +19,8 @@ namespace AutomateBrowser.Controllers
         public static string FirefoxLocation = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 
         public static string FireFoxDatabase = @"C:\Users\PANKAJ\AppData\Roaming\Mozilla\Firefox\Profiles\tc3timr4.default-release\places.sqlite";
+        public static string ChromeDatabase = @"C:\Users\PANKAJ\AppData\Local\Google\Chrome\User Data\Default\History";
+
     }
     [ApiController]
     public class BrowserAutomate : ControllerBase
@@ -90,19 +92,26 @@ namespace AutomateBrowser.Controllers
             switch (browser)
             {
                 case Browsers.Chrome:
-                   
-                    break;
+
+                    //HACK- need to copy
+                    var tempFile = @"C:\Users\PANKAJ\AppData\Local\Temp\chrome-history";
+                    if (!System.IO.File.Exists(tempFile))
+                    {
+                        System.IO.File.Delete(tempFile);
+                    }
+                    System.IO.File.Copy(Browsers.ChromeDatabase, tempFile, true);
+
+                    var query = "select url from urls order by last_visit_time desc LIMIT 1";
+
+                    var chromeResults = f_GetVisit(tempFile, query, f_Transfomer);
+
+                    return chromeResults.FirstOrDefault() ?? "";
 
                 case Browsers.Firefox:
 
-                    var visited = new List<Visit>();
-                    using (var connection = new SqliteConnection($"Data Source={Browsers.FireFoxDatabase}"))
-                    {
-                        connection.Open();
+                    Func<SqliteDataReader, string> ffxformer = (t) => t["url"].ToString();
 
-                        var command = connection.CreateCommand();
-                        command.CommandText =
-                                            @"
+                    var fxquery = @"
                                 SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch') AS visittime, moz_places.url AS url
                                 FROM moz_places, moz_historyvisits 
                                 WHERE moz_places.id = moz_historyvisits.place_id
@@ -110,21 +119,37 @@ namespace AutomateBrowser.Controllers
                                 LIMIT 1
                         ";
 
-                        using var reader = command.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            visited.Add(new Visit((Convert.ToDateTime(reader["visittime"])), reader["url"].ToString()));
-                        }
-                    }
+                    var firefoxResults = f_GetVisit(Browsers.FireFoxDatabase, fxquery, f_Transfomer);
+                    return firefoxResults.FirstOrDefault() ?? "";
 
-                    var lastVisited = visited.OrderByDescending(c => c.timeVisited).FirstOrDefault();
-                    return lastVisited != null ? lastVisited.url : "";
                 default:
                     break;
             }
             return "";
+
+
+            IEnumerable<string> f_GetVisit(string source, string query, Func<SqliteDataReader, string> transformer)
+            {
+                using var connection = new SqliteConnection($"Data Source={source}");
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = query;
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    yield return transformer(reader);
+                }
+
+            }
+
+            string f_Transfomer(SqliteDataReader r)
+            {
+                return r["url"].ToString();
+            }
         }
 
-        record Visit (DateTime timeVisited, string url);
+        record Visit(DateTime timeVisited, string url);
     }
 }
