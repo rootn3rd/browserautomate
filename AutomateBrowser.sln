@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomateBrowser", "AutomateBrowser\AutomateBrowser.csproj", "{DECB7C3D-EA87-43BC-9752-D55B070204CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsReader", "SettingsReader\SettingsReader.csproj", "{FD0309C3-0B4E-4923-ABD8-BECFCFF02846}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DECB7C3D-EA87-43BC-9752-D55B070204CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DECB7C3D-EA87-43BC-9752-D55B070204CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DECB7C3D-EA87-43BC-9752-D55B070204CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DECB7C3D-EA87-43BC-9752-D55B070204CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD0309C3-0B4E-4923-ABD8-BECFCFF02846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD0309C3-0B4E-4923-ABD8-BECFCFF02846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD0309C3-0B4E-4923-ABD8-BECFCFF02846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD0309C3-0B4E-4923-ABD8-BECFCFF02846}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9FCA3320-5080-4F99-95AD-13B88C15F77B}
+	EndGlobalSection
+EndGlobal
