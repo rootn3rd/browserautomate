@@ -76,8 +76,17 @@ namespace AutomateBrowser.Controllers
                     processes.ToList().ForEach(p => p.Kill());
                     await Task.Delay(1000);
 
-                    Directory.Delete(@"C:\Users\PANKAJ\AppData\Roaming\Mozilla\Firefox\Profiles", true);
+                    var query = @"DELETE FROM moz_places";
 
+                    using (var connection = new SqliteConnection($"Data Source={Browsers.FireFoxDatabase}"))
+                    {
+                        connection.Open();
+
+                        var command = connection.CreateCommand();
+                        command.CommandText = query;
+
+                        command.ExecuteNonQuery();
+                    }
                     break;
                 default:
                     break;
